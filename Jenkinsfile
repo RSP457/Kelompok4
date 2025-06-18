@@ -58,7 +58,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                    kubectl apply -f kubernetes/namespaces/flask-api-dev-namespace.yaml
+                    kubectl apply -f kubernetes/namespace/flask-api-dev-namespace.yaml
                     kubectl apply -f kubernetes/flask-api-deployment.yaml
                     kubectl apply -f kubernetes/flask-api-service.yaml
                 '''
