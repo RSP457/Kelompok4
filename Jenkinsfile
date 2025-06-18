@@ -57,7 +57,9 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
+                withCredentials([file(credentialsId: 'kubeconfig-dev', variable: 'KUBECONFIG_FILE')]) {
                 sh '''
+                    export KUBECONFIG=$KUBECONFIG_FILE
                     kubectl apply -f kubernetes/namespace/flask-api-dev-namespace.yaml
                     kubectl apply -f kubernetes/flask-api-deployment.yaml
                     kubectl apply -f kubernetes/flask-api-service.yaml
@@ -65,6 +67,7 @@ pipeline {
             }
         }
     }
+}
 
     post {
         success {
