@@ -47,7 +47,7 @@ pipeline {
 
         stage('Push to Docker Hub') {
             steps {
-                withDockerRegistry([ credentialsId: 'dockerhub-credentials', url: '' ]) {
+                withDockerRegistry([ credentialsId: 'kelompok4-credentials', url: '' ]) {
                     script {
                         dockerImage.push()
                     }
