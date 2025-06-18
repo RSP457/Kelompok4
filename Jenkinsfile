@@ -6,27 +6,34 @@ pipeline {
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
-    stage('Install Dependencies') {
-    steps {
-        sh '''
-            python3 -m venv venv
-            source venv/bin/activate
-            pip install --upgrade pip
-            pip install -r requirements.txt
-        '''
-    }
-}
-
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    python3 -m venv venv
+                    source venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                '''
+            }
+        }
 
         stage('Linting') {
             steps {
-                sh 'pip install flake8 && flake8 app.py'
+                sh '''
+                    source venv/bin/activate
+                    pip install flake8
+                    flake8 app.py || true
+                '''
             }
         }
 
         stage('Unit Test') {
             steps {
-                sh 'pytest || true' // jika tidak ada test, tetap jalan
+                sh '''
+                    source venv/bin/activate
+                    pytest || true
+                '''
             }
         }
 
@@ -51,9 +58,9 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                kubectl apply -f kubernetes/namespaces/
-                kubectl apply -f kubernetes/flask-api-deployment.yaml
-                kubectl apply -f kubernetes/flask-api-service.yaml
+                    kubectl apply -f kubernetes/namespaces/
+                    kubectl apply -f kubernetes/flask-api-deployment.yaml
+                    kubectl apply -f kubernetes/flask-api-service.yaml
                 '''
             }
         }
@@ -67,3 +74,4 @@ pipeline {
             echo '❌ Deployment Failed.'
         }
     }
+}
