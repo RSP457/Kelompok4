@@ -21,7 +21,7 @@ pipeline {
         stage('Linting') {
             steps {
                 sh '''
-                    source venv/bin/activate
+                    . venv/bin/activate
                     pip install flake8
                     flake8 app.py || true
                 '''
@@ -31,7 +31,7 @@ pipeline {
         stage('Unit Test') {
             steps {
                 sh '''
-                    source venv/bin/activate
+                    . venv/bin/activate
                     pytest || true
                 '''
             }
